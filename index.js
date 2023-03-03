@@ -4,11 +4,6 @@ const { createEvent } = require('./google');
 const notion = new Client({
     auth: process.env.NOTION_TOKEN
 });
-Date.prototype.addDays = function (days) {
-    var date = new Date(this.valueOf());
-    date.setDate(date.getDate() + days);
-    return date;
-};
 (async () => {
     const databaseId = '4f2211c6f09e4e558279eac8f553e85b';
     const response = await notion.databases.query({
@@ -19,6 +14,7 @@ Date.prototype.addDays = function (days) {
         const pageObject = await notion.pages.retrieve({ page_id: pageId });
         let dueDate = null;
         let created = new Date(pageObject.properties['Create Time'].created_time)
+        created.setTime(created.getTime() + 5 * 60 * 60 * 1000 + 30 * 60 * 1000)
         let days = [getDay(pageObject, '1D', 1), getDay(pageObject, '2D', 2), getDay(pageObject, '7D', 7), getDay(pageObject, '15D', 15), getDay(pageObject, '1M', 1 * 30), getDay(pageObject, '3M', 1 * 30 * 3),]
         console.log(days)
         for (let i = 0; i < days.length; i++) {
